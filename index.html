@@ -593,10 +593,11 @@
             color: white;
         }
         
+        /* PC端日期输入框优化 */
         .date-input-group {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
         
         .date-input-group input {
@@ -616,6 +617,26 @@
         
         .date-today-btn:hover {
             background: #46b8da;
+        }
+        
+        /* 只在PC端优化日期输入框 */
+        @media (min-width: 992px) {
+            .date-input-group {
+                gap: 6px;
+            }
+            
+            .date-input-group input {
+                flex: 3; /* 增加日期输入框的宽度比例 */
+                min-width: 0; /* 防止输入框溢出 */
+            }
+            
+            .date-today-btn {
+                flex: 1; /* 让"今天"按钮与输入框保持相同高度 */
+                min-width: 60px; /* 设置最小宽度 */
+                max-width: 80px; /* 设置最大宽度 */
+                padding: 8px 6px; /* 调整内边距 */
+                font-size: 0.8rem;
+            }
         }
         
         /* 底部导航栏 - 圆形动画优化 */
