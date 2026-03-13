@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>个人物品记录管理系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary: #4a6fa5;
+            --primary-light: #6b8cbc;
+            --secondary: #ff9a76;
+            --secondary-light: #ffb798;
+            --success: #5cb85c;
+            --danger: #d9534f;
+            --warning: #f0ad4e;
+            --info: #5bc0de;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --border-radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 8px;
+            padding-bottom: 80px; /* 为底部导航栏留出空间 */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 12px;
+            padding: 12px 8px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 6px;
+            font-size: 1.4rem;
+        }
+
+        .subtitle {
+            color: var(--gray);
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }
+
+        /* 统计模块 - 改为三个一排 */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 575px) {
+            .stats-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 10px 6px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card:nth-child(2) {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+        }
+
+        .stat-card:nth-child(3) {
+            background: linear-gradient(135deg, #5cb85c 0%, #7bd67b 100%);
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 4px 0;
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            opacity: 0.9;
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        @media (min-width: 992px) {
+            .main-content {
+                flex-direction: row;
+            }
+            
+            .left-panel {
+                flex: 1;
+            }
+            
+            .right-panel {
+                flex: 2;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 12px 8px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--gray-light);
+            color: var(--primary);
+        }
+
+        .card-title i {
+            margin-right: 6px;
+            font-size: 1rem;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.85rem;
+        }
+
+        input, button, select, textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 2px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 8px 10px;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary-light);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #4cae4c;
+        }
+
+        .btn-info {
+            background: var(--info);
+        }
+
+        .btn-info:hover {
+            background: #46b8da;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+        }
+
+        .btn-warning:hover {
+            background: #eea236;
+        }
+
+        .image-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .image-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            overflow: hidden;
+            border: 3px dashed var(--primary-light);
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview i {
+            font-size: 1.5rem;
+            color: var(--gray);
+        }
+
+        .items-list {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        /* 新的物品卡片布局 - 进一步压缩 */
+        .item-card {
+            display: flex;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: var(--light);
+            border-radius: 8px;
+            border-left: 5px solid var(--primary);
+            transition: var(--transition);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .item-card:hover {
+            transform: translateX(5px);
+            background: white;
+        }
+
+        .item-card.expanded {
+            margin-bottom: 40px; /* 为操作按钮留出空间 */
+        }
+
+        .item-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 10px;
+            flex-shrink: 0;
+            background: var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-image i {
+            font-size: 1.1rem;
+            color: var(--gray);
+        }
+
+        .item-details {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+            color: var(--dark);
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .item-info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        .item-price {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .item-daily-cost {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .item-date {
+            color: var(--gray);
+        }
+
+        .item-days-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-left: 6px;
+            padding-left: 6px;
+            border-left: 1px solid var(--gray-light);
+            min-width: 40px;
+        }
+
+        .item-days {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .item-days-label {
+            font-size: 0.6rem;
+            color: var(--gray);
+            text-align: center;
+        }
+
+        .item-actions {
+            display: none;
+            position: absolute;
+            bottom: -35px;
+            left: 0;
+            right: 0;
+            background: var(--light);
+            padding: 6px 10px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-card.expanded .item-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .item-actions button {
+            flex: 1;
+            padding: 5px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            font-size: 0.8rem;
+        }
+
+        .edit-btn {
+            background: var(--warning);
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #eea236;
+        }
+
+        .delete-btn {
+            background: var(--danger);
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c9302c;
+        }
+
+        .warning-note {
+            background: #fff8e1;
+            border-left: 4px solid var(--warning);
+            padding: 6px 8px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #856404;
+        }
+
+        .warning-note i {
+            color: var(--warning);
+            margin-right: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 20px 10px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            font-size: 0.8rem;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        @media (min-width: 576px) {
+            .button-group {
+                flex-direction: row;
+            }
+        }
+
+        .button-group button {
+            flex: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 8px;
+            color: var(--gray);
+            font-size: 0.7rem;
+        }
+
+        /* 滚动条样式 */
+        .items-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .items-list::-webkit-scrollbar-track {
+            background: var(--gray-light);
+            border-radius: 10px;
+        }
+
+        .items-list::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 10px;
+        }
+
+        .items-list::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+        
+        /* 卡片头部包含标题和排序按钮 */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--gray-light);
+        }
+
+        .card-title-container {
+            display: flex;
+            align-items: center;
+            color: var(--primary);
+        }
+
+        .card-title-container i {
+            margin-right: 6px;
+            font-size: 1rem;
+        }
+
+        .sort-dropdown {
+            position: relative;
+        }
+
+        .sort-toggle {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 5px 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .sort-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 6px;
+            box-shadow: var(--shadow);
+            min-width: 110px;
+            z-index: 10;
+            margin-top: 3px;
+        }
+
+        .sort-dropdown.open .sort-options {
+            display: block;
+        }
+
+        .sort-option {
+            padding: 6px 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--gray-light);
+            font-size: 0.75rem;
+        }
+
+        .sort-option:last-child {
+            border-bottom: none;
+        }
+
+        .sort-option:hover {
+            background: var(--gray-light);
+        }
+
+        .sort-option.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .date-input-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .date-input-group input {
+            flex: 1;
+        }
+        
+        .date-today-btn {
+            background: var(--info);
+            color: white;
+            border: none;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        
+        .date-today-btn:hover {
+            background: #46b8da;
+        }
+        
+        /* 底部导航栏 - 圆形动画优化 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            height: 70px;
+        }
+        
+        @media (min-width: 992px) {
+            .bottom-nav {
+                display: none;
+            }
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 12px;
+            color: var(--gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            border-radius: 50px;
+            margin: 0 5px;
+        }
+        
+        .nav-item.active {
+            color: white;
+            background-color: #7591bb;
+            box-shadow: 0 3px 10px rgba(117, 145, 187, 0.5);
+        }
+        
+        .nav-item i {
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item.active i {
+            transform: translateY(-3px);
+        }
+        
+        .nav-item span {
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item.active span {
+            font-weight: 600;
+        }
+        
+        /* 点击动画效果 - 圆形 */
+        .nav-item:active {
+            transform: scale(0.95);
+            background-color: rgba(117, 145, 187, 0.3);
+        }
+        
+        .nav-item:active i {
+            transform: scale(0.9);
+        }
+        
+        .nav-item.active:active i {
+            transform: translateY(-3px) scale(0.9);
+        }
+        
+        /* 加号按钮重新设计 - 圆形动画 */
+        .nav-add-btn {
+            position: relative;
+            bottom: 30px;
+            background: linear-gradient(135deg, #4a6fa5 0%, #7591bb 100%);
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 20px rgba(74, 111, 165, 0.4);
+            z-index: 1001;
+            transition: all 0.3s ease;
+            border: 4px solid white;
+        }
+        
+        /* 加号使用伪元素创建 */
+        .nav-add-btn::before {
+            content: '+';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        /* 点击动画 - 圆形缩放 */
+        .nav-add-btn:active {
+            transform: scale(0.9);
+            box-shadow: 0 4px 15px rgba(74, 111, 165, 0.6);
+        }
+        
+        /* 脉冲动画效果 - 圆形 */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 6px 20px rgba(74, 111, 165, 0.4), 0 0 0 0 rgba(74, 111, 165, 0.6);
+            }
+            70% {
+                box-shadow: 0 6px 20px rgba(74, 111, 165, 0.4), 0 0 0 15px rgba(74, 111, 165, 0);
+            }
+            100% {
+                box-shadow: 0 6px 20px rgba(74, 111, 165, 0.4), 0 0 0 0 rgba(74, 111, 165, 0);
+            }
+        }
+        
+        .nav-add-btn {
+            animation: pulse 2s infinite ease-in-out;
+        }
+        
+        /* 移动端页面内容 */
+        .mobile-page {
+            display: none;
+        }
+        
+        .mobile-page.active {
+            display: block;
+        }
+        
+        /* PC端布局 */
+        @media (min-width: 992px) {
+            .mobile-page {
+                display: none !important;
+            }
+            
+            .left-panel, .right-panel {
+                display: block !important;
+            }
+            
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
+        
+        /* 移动端隐藏PC端布局 */
+        @media (max-width: 991px) {
+            .left-panel, .right-panel {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-boxes"></i> 物品管理系统</h1>
+            <p class="subtitle">记录物品，跟踪资产价值与使用成本</p>
+            
+            <!-- 资产统计模块横向展示 -->
+            <div class="stats-container" id="statsContainer">
+                <div class="stat-card">
+                    <div class="stat-label">总物品数量</div>
+                    <div class="stat-value" id="totalItems">0</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-label">总资产价值</div>
+                    <div class="stat-value" id="totalAssets">0</div>
+                    <div class="stat-label">元</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-label">全部物品日均成本</div>
+                    <div class="stat-value" id="totalDailyCost">0</div>
+                    <div class="stat-label">元/天</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- PC端布局 -->
+        <div class="main-content">
+            <!-- 左侧：添加物品表单和导入导出 -->
+            <div class="left-panel">
+                <!-- 添加/编辑物品表单 -->
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-plus-circle"></i>
+                        <h2 id="formTitle">添加新物品</h2>
+                    </div>
+                    
+                    <div class="warning-note">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>提示：</strong>物品添加后可以编辑，点击物品右侧的编辑按钮进行修改。
+                    </div>
+                    
+                    <div class="image-upload">
+                        <div class="image-preview" id="imagePreview">
+                            <i class="fas fa-cube"></i>
+                            <img id="previewImage" style="display: none;" alt="物品预览">
+                        </div>
+                        <input type="file" id="itemImage" accept="image/*" style="display: none;">
+                        <button type="button" class="btn btn-secondary" id="uploadBtn">
+                            <i class="fas fa-upload"></i> 上传物品图片
+                        </button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="itemName"><i class="fas fa-tag"></i> 物品名称</label>
+                        <input type="text" id="itemName" placeholder="例如：笔记本电脑、手机、书籍...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="itemPrice"><i class="fas fa-dollar-sign"></i> 购入价格 (元)</label>
+                        <input type="number" id="itemPrice" min="0" step="0.01" placeholder="0.00">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="purchaseDate"><i class="far fa-calendar-alt"></i> 添加/购入时间</label>
+                        <div class="date-input-group">
+                            <input type="date" id="purchaseDate">
+                            <button type="button" class="date-today-btn" id="todayBtn">今天</button>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-success" id="addItemBtn">
+                            <i class="fas fa-save"></i> 保存物品
+                        </button>
+                        <button class="btn btn-warning" id="updateItemBtn" style="display: none;">
+                            <i class="fas fa-edit"></i> 更新
+                        </button>
+                        <button class="btn" id="cancelEditBtn" style="display: none;">
+                            <i class="fas fa-times"></i> 取消
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 导入导出功能 -->
+                <div class="card" style="margin-top: 12px;">
+                    <div class="card-title">
+                        <i class="fas fa-file-export"></i>
+                        <h2>数据导入导出</h2>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-info" id="exportBtn">
+                            <i class="fas fa-file-excel"></i> 导出Excel
+                        </button>
+                        <button class="btn btn-warning" id="importBtn">
+                            <i class="fas fa-file-import"></i> 导入Excel
+                        </button>
+                        <input type="file" id="importFile" accept=".csv, .xlsx, .xls" style="display: none;">
+                    </div>
+                    
+                    <div class="warning-note" style="margin-top: 10px;">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>导入格式：</strong>请使用导出的CSV格式文件，包含id, name, price, date, image列。
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧：物品列表 -->
+            <div class="right-panel">
+                <div class="card">
+                    <!-- 卡片头部包含标题和排序按钮 -->
+                    <div class="card-header">
+                        <div class="card-title-container">
+                            <i class="fas fa-list"></i>
+                            <h2>我的物品清单</h2>
+                        </div>
+                        
+                        <!-- 排序下拉菜单 -->
+                        <div class="sort-dropdown" id="sortDropdown">
+                            <button class="sort-toggle" id="sortToggle">
+                                <i class="fas fa-sort-amount-down"></i> 排序
+                                <i class="fas fa-caret-down" style="margin-left: 4px;"></i>
+                            </button>
+                            <div class="sort-options">
+                                <div class="sort-option active" data-sort="dateDesc">从新到旧</div>
+                                <div class="sort-option" data-sort="dateAsc">从旧到新</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="items-list" id="itemsList">
+                        <!-- 物品列表将通过JS动态加载 -->
+                        <div class="empty-state" id="emptyState">
+                            <i class="fas fa-box-open"></i>
+                            <h3>暂无物品记录</h3>
+                            <p>添加您的第一个物品开始记录吧！</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 移动端页面内容 -->
+        
+        <!-- 首页页面 -->
+        <div class="mobile-page active" id="mobileHomePage">
+            <div class="card">
+                <!-- 卡片头部包含标题和排序按钮 -->
+                <div class="card-header">
+                    <div class="card-title-container">
+                        <i class="fas fa-list"></i>
+                        <h2>我的物品清单</h2>
+                    </div>
+                    
+                    <!-- 排序下拉菜单 -->
+                    <div class="sort-dropdown" id="mobileSortDropdown">
+                        <button class="sort-toggle" id="mobileSortToggle">
+                            <i class="fas fa-sort-amount-down"></i> 排序
+                            <i class="fas fa-caret-down" style="margin-left: 4px;"></i>
+                        </button>
+                        <div class="sort-options">
+                            <div class="sort-option active" data-sort="dateDesc">从新到旧</div>
+                            <div class="sort-option" data-sort="dateAsc">从旧到新</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="items-list" id="mobileItemsList">
+                    <!-- 物品列表将通过JS动态加载 -->
+                    <div class="empty-state" id="mobileEmptyState">
+                        <i class="fas fa-box-open"></i>
+                        <h3>暂无物品记录</h3>
+                        <p>添加您的第一个物品开始记录吧！</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 添加商品页面 -->
+        <div class="mobile-page" id="mobileAddPage">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-plus-circle"></i>
+                    <h2 id="mobileFormTitle">添加新物品</h2>
+                </div>
+                
+                <div class="warning-note">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>提示：</strong>物品添加后可以编辑，点击物品右侧的编辑按钮进行修改。
+                </div>
+                
+                <div class="image-upload">
+                    <div class="image-preview" id="mobileImagePreview">
+                        <i class="fas fa-cube"></i>
+                        <img id="mobilePreviewImage" style="display: none;" alt="物品预览">
+                    </div>
+                    <input type="file" id="mobileItemImage" accept="image/*" style="display: none;">
+                    <button type="button" class="btn btn-secondary" id="mobileUploadBtn">
+                        <i class="fas fa-upload"></i> 上传物品图片
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="mobileItemName"><i class="fas fa-tag"></i> 物品名称</label>
+                    <input type="text" id="mobileItemName" placeholder="例如：笔记本电脑、手机、书籍...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="mobileItemPrice"><i class="fas fa-dollar-sign"></i> 购入价格 (元)</label>
+                    <input type="number" id="mobileItemPrice" min="0" step="0.01" placeholder="0.00">
+                </div>
+                
+                <div class="form-group">
+                    <label for="mobilePurchaseDate"><i class="far fa-calendar-alt"></i> 添加/购入时间</label>
+                    <div class="date-input-group">
+                        <input type="date" id="mobilePurchaseDate">
+                        <button type="button" class="date-today-btn" id="mobileTodayBtn">今天</button>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-success" id="mobileAddItemBtn">
+                        <i class="fas fa-save"></i> 保存物品
+                    </button>
+                    <button class="btn btn-warning" id="mobileUpdateItemBtn" style="display: none;">
+                        <i class="fas fa-edit"></i> 更新
+                    </button>
+                    <button class="btn" id="mobileCancelEditBtn" style="display: none;">
+                        <i class="fas fa-times"></i> 取消
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 我的页面 -->
+        <div class="mobile-page" id="mobileMyPage">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-file-export"></i>
+                    <h2>数据导入导出</h2>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-info" id="mobilePageExportBtn">
+                        <i class="fas fa-file-excel"></i> 导出Excel
+                    </button>
+                    <button class="btn btn-warning" id="mobilePageImportBtn">
+                        <i class="fas fa-file-import"></i> 导入Excel
+                    </button>
+                    <input type="file" id="mobilePageImportFile" accept=".csv, .xlsx, .xls" style="display: none;">
+                </div>
+                
+                <div class="warning-note" style="margin-top: 10px;">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>导入格式：</strong>请使用导出的CSV格式文件，包含id, name, price, date, image列。
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>个人物品记录管理系统 &copy; 2024 | 数据保存在本地浏览器中</p>
+        </footer>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active" data-page="mobileHomePage">
+            <i class="fas fa-home"></i>
+            <span>首页</span>
+        </a>
+        
+        <a href="#" class="nav-add-btn" data-page="mobileAddPage">
+            <!-- 这里不需要内容，加号由CSS伪元素生成 -->
+        </a>
+        
+        <a href="#" class="nav-item" data-page="mobileMyPage">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script>
+        // 默认物品图标（Base64编码的简单图标）
+        const DEFAULT_IMAGE = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjNmI4Y2JjIiByeD0iMTIiLz4KPHBhdGggZD0iTTMyIDE4TDM4IDI0TDM0IDI4TDI4IDIyTDIyIDI4TDE4IDI0TDI0IDE4TDE4IDEyTDIyIDhMMjggMTRMMzQgOEwzOCAxMkwzMiAxOFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=";
+        
+        // 从localStorage加载物品数据
+        let items = JSON.parse(localStorage.getItem('personalItems')) || [];
+        
+        // 当前编辑的物品ID
+        let currentEditId = null;
+        
+        // 排序方式：默认按购入时间从新到旧排序
+        let sortOrder = 'dateDesc';
+        
+        // 当前展开的物品ID
+        let expandedItemId = null;
+        
+        // DOM元素 - PC端
+        const itemNameInput = document.getElementById('itemName');
+        const itemPriceInput = document.getElementById('itemPrice');
+        const purchaseDateInput = document.getElementById('purchaseDate');
+        const itemImageInput = document.getElementById('itemImage');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImage = document.getElementById('previewImage');
+        const addItemBtn = document.getElementById('addItemBtn');
+        const updateItemBtn = document.getElementById('updateItemBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const importBtn = document.getElementById('importBtn');
+        const importFileInput = document.getElementById('importFile');
+        const itemsList = document.getElementById('itemsList');
+        const emptyState = document.getElementById('emptyState');
+        const totalItemsEl = document.getElementById('totalItems');
+        const totalAssetsEl = document.getElementById('totalAssets');
+        const totalDailyCostEl = document.getElementById('totalDailyCost');
+        const formTitle = document.getElementById('formTitle');
+        const todayBtn = document.getElementById('todayBtn');
+        const sortDropdown = document.getElementById('sortDropdown');
+        const sortToggle = document.getElementById('sortToggle');
+        
+        // DOM元素 - 移动端
+        const mobileItemNameInput = document.getElementById('mobileItemName');
+        const mobileItemPriceInput = document.getElementById('mobileItemPrice');
+        const mobilePurchaseDateInput = document.getElementById('mobilePurchaseDate');
+        const mobileItemImageInput = document.getElementById('mobileItemImage');
+        const mobileUploadBtn = document.getElementById('mobileUploadBtn');
+        const mobileImagePreview = document.getElementById('mobileImagePreview');
+        const mobilePreviewImage = document.getElementById('mobilePreviewImage');
+        const mobileAddItemBtn = document.getElementById('mobileAddItemBtn');
+        const mobileUpdateItemBtn = document.getElementById('mobileUpdateItemBtn');
+        const mobileCancelEditBtn = document.getElementById('mobileCancelEditBtn');
+        const mobilePageExportBtn = document.getElementById('mobilePageExportBtn');
+        const mobilePageImportBtn = document.getElementById('mobilePageImportBtn');
+        const mobilePageImportFile = document.getElementById('mobilePageImportFile');
+        const mobileItemsList = document.getElementById('mobileItemsList');
+        const mobileEmptyState = document.getElementById('mobileEmptyState');
+        const mobileFormTitle = document.getElementById('mobileFormTitle');
+        const mobileTodayBtn = document.getElementById('mobileTodayBtn');
+        const mobileSortDropdown = document.getElementById('mobileSortDropdown');
+        const mobileSortToggle = document.getElementById('mobileSortToggle');
+        
+        // 导航元素
+        const navItems = document.querySelectorAll('.nav-item');
+        const navAddBtn = document.querySelector('.nav-add-btn');
+        const mobilePages = document.querySelectorAll('.mobile-page');
+        
+        // 设置默认日期为今天
+        const today = new Date().toISOString().split('T')[0];
+        purchaseDateInput.value = today;
+        purchaseDateInput.max = today;
+        mobilePurchaseDateInput.value = today;
+        mobilePurchaseDateInput.max = today;
+        
+        // 底部导航切换
+        navItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const pageId = this.getAttribute('data-page');
+                
+                // 更新导航状态
+                navItems.forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 显示对应页面
+                mobilePages.forEach(page => page.classList.remove('active'));
+                document.getElementById(pageId).classList.add('active');
+            });
+        });
+        
+        // 添加按钮点击
+        navAddBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const pageId = this.getAttribute('data-page');
+            
+            // 更新导航状态
+            navItems.forEach(nav => nav.classList.remove('active'));
+            
+            // 显示添加页面
+            mobilePages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            
+            // 重置添加表单
+            resetMobileForm();
+        });
+        
+        // 今天按钮
+        todayBtn.addEventListener('click', function() {
+            purchaseDateInput.value = today;
+        });
+        
+        mobileTodayBtn.addEventListener('click', function() {
+            mobilePurchaseDateInput.value = today;
+        });
+        
+        // 图片上传功能 - PC端
+        uploadBtn.addEventListener('click', () => {
+            itemImageInput.click();
+        });
+        
+        itemImageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    imagePreview.querySelector('i').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // 图片上传功能 - 移动端
+        mobileUploadBtn.addEventListener('click', () => {
+            mobileItemImageInput.click();
+        });
+        
+        mobileItemImageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    mobilePreviewImage.src = e.target.result;
+                    mobilePreviewImage.style.display = 'block';
+                    mobileImagePreview.querySelector('i').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // 添加物品 - PC端
+        addItemBtn.addEventListener('click', addItem);
+        
+        // 添加物品 - 移动端
+        mobileAddItemBtn.addEventListener('click', addItem);
+        
+        // 更新物品 - PC端
+        updateItemBtn.addEventListener('click', updateItem);
+        
+        // 更新物品 - 移动端
+        mobileUpdateItemBtn.addEventListener('click', updateItem);
+        
+        // 取消编辑 - PC端
+        cancelEditBtn.addEventListener('click', cancelEdit);
+        
+        // 取消编辑 - 移动端
+        mobileCancelEditBtn.addEventListener('click', cancelEdit);
+        
+        // 导出功能
+        exportBtn.addEventListener('click', exportToExcel);
+        mobilePageExportBtn.addEventListener('click', exportToExcel);
+        
+        // 导入功能
+        importBtn.addEventListener('click', () => {
+            importFileInput.click();
+        });
+        
+        mobilePageImportBtn.addEventListener('click', () => {
+            mobilePageImportFile.click();
+        });
+        
+        importFileInput.addEventListener('change', importFromExcel);
+        mobilePageImportFile.addEventListener('change', importFromExcel);
+        
+        // 排序功能 - PC端
+        sortToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            sortDropdown.classList.toggle('open');
+        });
+        
+        // 排序功能 - 移动端
+        mobileSortToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            mobileSortDropdown.classList.toggle('open');
+        });
+        
+        // 关闭排序下拉菜单
+        document.addEventListener('click', function(e) {
+            if (!sortDropdown.contains(e.target)) {
+                sortDropdown.classList.remove('open');
+            }
+            if (!mobileSortDropdown.contains(e.target)) {
+                mobileSortDropdown.classList.remove('open');
+            }
+        });
+        
+        // 排序选项点击 - PC端
+        document.querySelectorAll('#sortDropdown .sort-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const sortValue = this.getAttribute('data-sort');
+                setSortOrder(sortValue);
+                
+                // 更新排序选项状态
+                document.querySelectorAll('#sortDropdown .sort-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 关闭下拉菜单
+                sortDropdown.classList.remove('open');
+            });
+        });
+        
+        // 排序选项点击 - 移动端
+        document.querySelectorAll('#mobileSortDropdown .sort-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const sortValue = this.getAttribute('data-sort');
+                setSortOrder(sortValue);
+                
+                // 更新排序选项状态
+                document.querySelectorAll('#mobileSortDropdown .sort-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 关闭下拉菜单
+                mobileSortDropdown.classList.remove('open');
+            });
+        });
+        
+        // 设置排序顺序
+        function setSortOrder(order) {
+            sortOrder = order;
+            renderItems();
+        }
+        
+        // 按Enter键也可以添加物品
+        itemNameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (currentEditId) {
+                    updateItem();
+                } else {
+                    addItem();
+                }
+            }
+        });
+        
+        itemPriceInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (currentEditId) {
+                    updateItem();
+                } else {
+                    addItem();
+                }
+            }
+        });
+        
+        mobileItemNameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (currentEditId) {
+                    updateItem();
+                } else {
+                    addItem();
+                }
+            }
+        });
+        
+        mobileItemPriceInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (currentEditId) {
+                    updateItem();
+                } else {
+                    addItem();
+                }
+            }
+        });
+        
+        // 添加物品函数
+        function addItem() {
+            const isMobile = window.innerWidth < 992;
+            
+            const name = isMobile ? mobileItemNameInput.value.trim() : itemNameInput.value.trim();
+            const price = isMobile ? parseFloat(mobileItemPriceInput.value) : parseFloat(itemPriceInput.value);
+            const date = isMobile ? mobilePurchaseDateInput.value : purchaseDateInput.value;
+            
+            if (!name) {
+                alert('请输入物品名称');
+                if (isMobile) {
+                    mobileItemNameInput.focus();
+                } else {
+                    itemNameInput.focus();
+                }
+                return;
+            }
+            
+            if (isNaN(price) || price <= 0) {
+                alert('请输入有效的价格');
+                if (isMobile) {
+                    mobileItemPriceInput.focus();
+                } else {
+                    itemPriceInput.focus();
+                }
+                return;
+            }
+            
+            if (!date) {
+                alert('请选择购入日期');
+                if (isMobile) {
+                    mobilePurchaseDateInput.focus();
+                } else {
+                    purchaseDateInput.focus();
+                }
+                return;
+            }
+            
+            // 获取图片数据
+            let imageData = DEFAULT_IMAGE;
+            if (isMobile) {
+                if (mobilePreviewImage.style.display === 'block') {
+                    imageData = mobilePreviewImage.src;
+                }
+            } else {
+                if (previewImage.style.display === 'block') {
+                    imageData = previewImage.src;
+                }
+            }
+            
+            // 创建新物品对象
+            const newItem = {
+                id: Date.now(),
+                name: name,
+                price: price,
+                date: date,
+                image: imageData,
+                addedAt: new Date().toISOString()
+            };
+            
+            // 添加到数组
+            items.push(newItem);
+            
+            // 保存到localStorage
+            saveItems();
+            
+            // 清空表单
+            if (isMobile) {
+                resetMobileForm();
+                // 切换到首页
+                mobilePages.forEach(page => page.classList.remove('active'));
+                document.getElementById('mobileHomePage').classList.add('active');
+                navItems.forEach(nav => nav.classList.remove('active'));
+                document.querySelector('.nav-item[data-page="mobileHomePage"]').classList.add('active');
+            } else {
+                resetForm();
+            }
+            
+            // 重新渲染列表和统计
+            renderItems();
+            updateStatistics();
+            
+            // 聚焦到物品名称输入框
+            if (isMobile) {
+                mobileItemNameInput.focus();
+            } else {
+                itemNameInput.focus();
+            }
+        }
+        
+        // 更新物品函数
+        function updateItem() {
+            if (!currentEditId) return;
+            
+            const isMobile = window.innerWidth < 992;
+            
+            const name = isMobile ? mobileItemNameInput.value.trim() : itemNameInput.value.trim();
+            const price = isMobile ? parseFloat(mobileItemPriceInput.value) : parseFloat(itemPriceInput.value);
+            const date = isMobile ? mobilePurchaseDateInput.value : purchaseDateInput.value;
+            
+            if (!name) {
+                alert('请输入物品名称');
+                if (isMobile) {
+                    mobileItemNameInput.focus();
+                } else {
+                    itemNameInput.focus();
+                }
+                return;
+            }
+            
+            if (isNaN(price) || price <= 0) {
+                alert('请输入有效的价格');
+                if (isMobile) {
+                    mobileItemPriceInput.focus();
+                } else {
+                    itemPriceInput.focus();
+                }
+                return;
+            }
+            
+            if (!date) {
+                alert('请选择购入日期');
+                if (isMobile) {
+                    mobilePurchaseDateInput.focus();
+                } else {
+                    purchaseDateInput.focus();
+                }
+                return;
+            }
+            
+            // 获取图片数据
+            let imageData = DEFAULT_IMAGE;
+            if (isMobile) {
+                if (mobilePreviewImage.style.display === 'block') {
+                    imageData = mobilePreviewImage.src;
+                }
+            } else {
+                if (previewImage.style.display === 'block') {
+                    imageData = previewImage.src;
+                }
+            }
+            
+            // 找到要更新的物品
+            const index = items.findIndex(item => item.id === currentEditId);
+            if (index !== -1) {
+                // 更新物品
+                items[index] = {
+                    ...items[index],
+                    name: name,
+                    price: price,
+                    date: date,
+                    image: imageData
+                };
+                
+                // 保存到localStorage
+                saveItems();
+                
+                // 重新渲染列表和统计
+                renderItems();
+                updateStatistics();
+                
+                // 重置表单
+                if (isMobile) {
+                    resetMobileForm();
+                    // 切换到首页
+                    mobilePages.forEach(page => page.classList.remove('active'));
+                    document.getElementById('mobileHomePage').classList.add('active');
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    document.querySelector('.nav-item[data-page="mobileHomePage"]').classList.add('active');
+                } else {
+                    resetForm();
+                }
+                
+                // 取消编辑状态
+                currentEditId = null;
+                if (isMobile) {
+                    mobileUpdateItemBtn.style.display = 'none';
+                    mobileCancelEditBtn.style.display = 'none';
+                    mobileAddItemBtn.style.display = 'flex';
+                    mobileFormTitle.textContent = '添加新物品';
+                } else {
+                    updateItemBtn.style.display = 'none';
+                    cancelEditBtn.style.display = 'none';
+                    addItemBtn.style.display = 'flex';
+                    formTitle.textContent = '添加新物品';
+                }
+            }
+        }
+        
+        // 取消编辑
+        function cancelEdit() {
+            const isMobile = window.innerWidth < 992;
+            
+            if (isMobile) {
+                resetMobileForm();
+                mobileUpdateItemBtn.style.display = 'none';
+                mobileCancelEditBtn.style.display = 'none';
+                mobileAddItemBtn.style.display = 'flex';
+                mobileFormTitle.textContent = '添加新物品';
+            } else {
+                resetForm();
+                updateItemBtn.style.display = 'none';
+                cancelEditBtn.style.display = 'none';
+                addItemBtn.style.display = 'flex';
+                formTitle.textContent = '添加新物品';
+            }
+            
+            currentEditId = null;
+        }
+        
+        // 重置PC端表单
+        function resetForm() {
+            itemNameInput.value = '';
+            itemPriceInput.value = '';
+            purchaseDateInput.value = today;
+            previewImage.style.display = 'none';
+            imagePreview.querySelector('i').style.display = 'block';
+            itemImageInput.value = '';
+        }
+        
+        // 重置移动端表单
+        function resetMobileForm() {
+            mobileItemNameInput.value = '';
+            mobileItemPriceInput.value = '';
+            mobilePurchaseDateInput.value = today;
+            mobilePreviewImage.style.display = 'none';
+            mobileImagePreview.querySelector('i').style.display = 'block';
+            mobileItemImageInput.value = '';
+        }
+        
+        // 设置编辑表单
+        function setEditForm(item) {
+            const isMobile = window.innerWidth < 992;
+            
+            if (isMobile) {
+                mobileItemNameInput.value = item.name;
+                mobileItemPriceInput.value = item.price;
+                mobilePurchaseDateInput.value = item.date;
+                
+                if (item.image !== DEFAULT_IMAGE) {
+                    mobilePreviewImage.src = item.image;
+                    mobilePreviewImage.style.display = 'block';
+                    mobileImagePreview.querySelector('i').style.display = 'none';
+                } else {
+                    mobilePreviewImage.style.display = 'none';
+                    mobileImagePreview.querySelector('i').style.display = 'block';
+                }
+                
+                currentEditId = item.id;
+                mobileUpdateItemBtn.style.display = 'flex';
+                mobileCancelEditBtn.style.display = 'flex';
+                mobileAddItemBtn.style.display = 'none';
+                mobileFormTitle.textContent = '编辑物品';
+                
+                // 切换到添加页面
+                mobilePages.forEach(page => page.classList.remove('active'));
+                document.getElementById('mobileAddPage').classList.add('active');
+                navItems.forEach(nav => nav.classList.remove('active'));
+            } else {
+                itemNameInput.value = item.name;
+                itemPriceInput.value = item.price;
+                purchaseDateInput.value = item.date;
+                
+                if (item.image !== DEFAULT_IMAGE) {
+                    previewImage.src = item.image;
+                    previewImage.style.display = 'block';
+                    imagePreview.querySelector('i').style.display = 'none';
+                } else {
+                    previewImage.style.display = 'none';
+                    imagePreview.querySelector('i').style.display = 'block';
+                }
+                
+                currentEditId = item.id;
+                updateItemBtn.style.display = 'flex';
+                cancelEditBtn.style.display = 'flex';
+                addItemBtn.style.display = 'none';
+                formTitle.textContent = '编辑物品';
+            }
+            
+            expandedItemId = null; // 关闭展开状态
+        }
+        
+        // 导出到Excel
+        function exportToExcel() {
+            if (items.length === 0) {
+                alert('没有物品可导出');
+                return;
+            }
+            
+            // 准备CSV内容
+            let csvContent = "data:text/csv;charset=utf-8,";
+            
+            // 添加表头
+            csvContent += "id,name,price,date,image\n";
+            
+            // 添加数据行
+            items.forEach(item => {
+                const row = [
+                    item.id,
+                    `"${item.name.replace(/"/g, '""')}"`,
+                    item.price,
+                    item.date,
+                    `"${item.image.replace(/"/g, '""')}"`
+                ].join(',');
+                csvContent += row + "\n";
+            });
+            
+            // 创建下载链接
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `items_${new Date().toISOString().slice(0, 10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // 从Excel导入
+        function importFromExcel(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                const lines = content.split('\n');
+                
+                // 检查表头
+                const header = lines[0].split(',');
+                if (header.length < 5 || header[0] !== 'id' || header[1] !== 'name' || 
+                    header[2] !== 'price' || header[3] !== 'date' || header[4] !== 'image') {
+                    alert('文件格式不正确，请使用导出的CSV文件格式');
+                    return;
+                }
+                
+                // 解析数据行
+                const importedItems = [];
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim() === '') continue;
+                    
+                    const columns = parseCSVLine(lines[i]);
+                    
+                    if (columns.length >= 5) {
+                        const id = parseInt(columns[0]);
+                        const name = columns[1].replace(/^"|"$/g, '').replace(/""/g, '"');
+                        const price = parseFloat(columns[2]);
+                        const date = columns[3];
+                        let image = columns[4].replace(/^"|"$/g, '').replace(/""/g, '"');
+                        
+                        // 如果没有图片或图片为空，使用默认图片
+                        if (!image || image === '') {
+                            image = DEFAULT_IMAGE;
+                        }
+                        
+                        importedItems.push({
+                            id: isNaN(id) ? Date.now() + i : id,
+                            name: name,
+                            price: price,
+                            date: date,
+                            image: image,
+                            addedAt: new Date().toISOString()
+                        });
+                    }
+                }
+                
+                if (importedItems.length === 0) {
+                    alert('没有找到有效的物品数据');
+                    return;
+                }
+                
+                // 合并导入的数据（如果ID已存在则更新，否则添加）
+                importedItems.forEach(importedItem => {
+                    const existingIndex = items.findIndex(item => item.id === importedItem.id);
+                    if (existingIndex !== -1) {
+                        items[existingIndex] = importedItem;
+                    } else {
+                        items.push(importedItem);
+                    }
+                });
+                
+                // 保存到localStorage
+                saveItems();
+                
+                // 重新渲染列表和统计
+                renderItems();
+                updateStatistics();
+                
+                // 清空文件输入
+                importFileInput.value = '';
+                mobilePageImportFile.value = '';
+                
+                alert(`成功导入 ${importedItems.length} 个物品`);
+            };
+            
+            reader.readAsText(file);
+        }
+        
+        // 解析CSV行，处理引号内的逗号
+        function parseCSVLine(line) {
+            const result = [];
+            let inQuotes = false;
+            let currentField = '';
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                const nextChar = i < line.length - 1 ? line[i + 1] : '';
+                
+                if (char === '"' && nextChar === '"') {
+                    currentField += '"';
+                    i++; // 跳过下一个引号
+                } else if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(currentField);
+                    currentField = '';
+                } else {
+                    currentField += char;
+                }
+            }
+            
+            result.push(currentField);
+            return result;
+        }
+        
+        // 保存物品到localStorage
+        function saveItems() {
+            localStorage.setItem('personalItems', JSON.stringify(items));
+        }
+        
+        // 计算拥有天数
+        function getDaysSince(dateString) {
+            const purchaseDate = new Date(dateString);
+            const today = new Date();
+            const diffTime = today - purchaseDate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            return Math.max(diffDays, 0);
+        }
+        
+        // 计算日均成本
+        function getDailyCost(price, days) {
+            if (days === 0) return price.toFixed(2); // 如果当天购买，则日均成本为价格本身
+            return (price / days).toFixed(2);
+        }
+        
+        // 对物品进行排序
+        function sortItems(items) {
+            // 创建副本以避免修改原数组
+            const sortedItems = [...items];
+            
+            if (sortOrder === 'dateDesc') {
+                // 按购入时间从新到旧排序
+                sortedItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else if (sortOrder === 'dateAsc') {
+                // 按购入时间从旧到新排序
+                sortedItems.sort((a, b) => new Date(a.date) - new Date(b.date));
+            }
+            
+            return sortedItems;
+        }
+        
+        // 渲染物品列表
+        function renderItems() {
+            const isMobile = window.innerWidth < 992;
+            const targetList = isMobile ? mobileItemsList : itemsList;
+            const targetEmptyState = isMobile ? mobileEmptyState : emptyState;
+            
+            if (items.length === 0) {
+                targetEmptyState.style.display = 'block';
+                targetList.innerHTML = '';
+                targetList.appendChild(targetEmptyState);
+                return;
+            }
+            
+            targetEmptyState.style.display = 'none';
+            
+            // 对物品进行排序
+            const sortedItems = sortItems(items);
+            
+            let itemsHTML = '';
+            
+            sortedItems.forEach(item => {
+                const days = getDaysSince(item.date);
+                const dailyCost = getDailyCost(item.price, days);
+                const isExpanded = expandedItemId === item.id;
+                
+                itemsHTML += `
+                <div class="item-card ${isExpanded ? 'expanded' : ''}" data-id="${item.id}" onclick="toggleItemActions(${item.id}, event)">
+                    <div class="item-image">
+                        ${item.image === DEFAULT_IMAGE ? 
+                          '<i class="fas fa-cube"></i>' : 
+                          `<img src="${item.image}" alt="${item.name}">`}
+                    </div>
+                    <div class="item-details">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-info">
+                            <div class="item-info-row">
+                                <span class="item-price"><i class="fas fa-dollar-sign"></i> ${item.price.toFixed(2)} 元</span>
+                                <span class="item-daily-cost"><i class="fas fa-calculator"></i> ${dailyCost} 元/天</span>
+                            </div>
+                            <div class="item-info-row">
+                                <span class="item-date"><i class="far fa-clock"></i> ${item.date}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-days-container">
+                        <div class="item-days">${days}</div>
+                        <div class="item-days-label">已购入天数</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="edit-btn" onclick="editItem(${item.id})" title="编辑物品">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button class="delete-btn" onclick="deleteItem(${item.id})" title="删除物品">
+                            <i class="fas fa-trash"></i> 删除
+                        </button>
+                    </div>
+                </div>
+                `;
+            });
+            
+            targetList.innerHTML = itemsHTML;
+        }
+        
+        // 切换物品操作按钮显示
+        function toggleItemActions(itemId, event) {
+            // 防止点击编辑/删除按钮时触发卡片点击
+            if (event.target.closest('.edit-btn') || event.target.closest('.delete-btn')) {
+                return;
+            }
+            
+            if (expandedItemId === itemId) {
+                // 如果已经展开，则关闭
+                expandedItemId = null;
+            } else {
+                // 否则展开当前点击的卡片
+                expandedItemId = itemId;
+            }
+            
+            // 重新渲染列表
+            renderItems();
+        }
+        
+        // 编辑物品
+        function editItem(id) {
+            const item = items.find(item => item.id === id);
+            if (item) {
+                setEditForm(item);
+            }
+        }
+        
+        // 删除物品
+        function deleteItem(id) {
+            if (confirm('确定要删除这个物品吗？删除后无法恢复。')) {
+                items = items.filter(item => item.id !== id);
+                saveItems();
+                renderItems();
+                updateStatistics();
+                expandedItemId = null; // 重置展开状态
+            }
+        }
+        
+        // 更新统计信息
+        function updateStatistics() {
+            const totalItems = items.length;
+            const totalAssets = items.reduce((sum, item) => sum + item.price, 0);
+            
+            // 计算总日均成本（所有物品日均成本之和）
+            let totalDailyCost = 0;
+            
+            items.forEach(item => {
+                const days = getDaysSince(item.date);
+                if (days > 0) {
+                    totalDailyCost += item.price / days;
+                } else {
+                    totalDailyCost += item.price; // 如果当天购买，则按价格计算
+                }
+            });
+            
+            // 更新DOM
+            totalItemsEl.textContent = totalItems;
+            totalAssetsEl.textContent = totalAssets.toFixed(2);
+            totalDailyCostEl.textContent = totalDailyCost.toFixed(2);
+        }
+        
+        // 初始化页面
+        function init() {
+            renderItems();
+            updateStatistics();
+        }
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
