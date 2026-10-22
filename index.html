@@ -2158,7 +2158,7 @@
                 
                 <div class="stat-card">
                     <div class="stat-label">日耗</div>
-                    <div class="stat-value"><span id="totalDailyCost">0</span><small>元/天</small></div>
+                    <div class="stat-value"><span id="totalDailyCost">0</span><small>元/日</small></div>
                 </div>
             </div>
         </header>
@@ -2189,7 +2189,7 @@
                     
                     <div class="warning-note">
                         <i class="fas fa-info-circle"></i>
-                        <strong>提示：</strong>附加项按「耗」计入总价、按「得」抵扣，支持分别填写金额与日期；归藏之日可选，填写后用度停在归藏当天。
+                        <strong>笺注：</strong>附加项按「耗」计入总价、按「得」抵扣，支持分别填写金额与日期；归藏之日可选，填写后用度停在归藏当天。
                     </div>
                     
                     <div class="form-row-2">
@@ -2212,8 +2212,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="itemName"><i class="fas fa-tag"></i> 器物之名</label>
-                        <input type="text" id="itemName" placeholder="例如：笔记本电脑、手机、书籍...">
+                        <label for="itemName"><i class="fas fa-tag"></i> 物名</label>
+                        <input type="text" id="itemName" placeholder="诸如：案头笔札、架上书册、砚台琴器、茶具香具……">
                     </div>
                     
                     <div class="form-group">
@@ -2223,7 +2223,7 @@
 
                     <!-- 附加项 -->
                     <div class="form-group">
-                        <label><i class="fas fa-list-ul"></i> 附记（选填）</label>
+                        <label><i class="fas fa-list-ul"></i> 附记（未录亦可）</label>
                         <div class="subitem-field-row">
                             <div class="subitem-amount-box"><span id="subItemTotal">0.00</span> 元</div>
                             <button type="button" class="btn btn-warning subitem-add-btn" id="addSubItemBtn">
@@ -2239,12 +2239,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="retireDate"><i class="fas fa-flag-checkered"></i> 归藏之日（选填）</label>
+                        <label for="retireDate"><i class="fas fa-flag-checkered"></i> 归藏之日（未录亦可）</label>
                         <input type="date" id="retireDate" class="date-empty">
                     </div>
 
                     <div class="form-group">
-                        <label for="retireValue"><i class="fas fa-coins"></i> 归藏所得（选填，不入统计）</label>
+                        <label for="retireValue"><i class="fas fa-coins"></i> 归藏所得（未录亦可，不登总录）</label>
                         <input type="number" id="retireValue" min="0" step="0.01" placeholder="如变卖或回收所得">
                     </div>
                     
@@ -2402,7 +2402,7 @@
                 
                 <div class="warning-note">
                     <i class="fas fa-info-circle"></i>
-                    <strong>提示：</strong>附加项按「耗」计入总价、按「得」抵扣，支持分别填写金额与日期；归藏之日可选，填写后用度停在归藏当天。
+                    <strong>笺注：</strong>附加项按「耗」计入总价、按「得」抵扣，支持分别填写金额与日期；归藏之日可选，填写后用度停在归藏当天。
                 </div>
                 
                 <div class="form-row-2">
@@ -2425,8 +2425,8 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="mobileItemName"><i class="fas fa-tag"></i> 器物之名</label>
-                    <input type="text" id="mobileItemName" placeholder="例如：笔记本电脑、手机、书籍...">
+                    <label for="mobileItemName"><i class="fas fa-tag"></i> 物名</label>
+                    <input type="text" id="mobileItemName" placeholder="诸如：案头笔札、架上书册、砚台琴器、茶具香具……">
                 </div>
                 
                 <div class="form-group">
@@ -2436,7 +2436,7 @@
 
                 <!-- 附加项 -->
                 <div class="form-group">
-                    <label><i class="fas fa-list-ul"></i> 附记（选填）</label>
+                    <label><i class="fas fa-list-ul"></i> 附记（未录亦可）</label>
                     <div class="subitem-field-row">
                         <div class="subitem-amount-box"><span id="mobileSubItemTotal">0.00</span> 元</div>
                         <button type="button" class="btn btn-warning subitem-add-btn" id="mobileAddSubItemBtn">
@@ -2452,12 +2452,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="mobileRetireDate"><i class="fas fa-flag-checkered"></i> 归藏之日（选填）</label>
+                    <label for="mobileRetireDate"><i class="fas fa-flag-checkered"></i> 归藏之日（未录亦可）</label>
                     <input type="date" id="mobileRetireDate" class="date-empty">
                 </div>
 
                 <div class="form-group">
-                    <label for="mobileRetireValue"><i class="fas fa-coins"></i> 归藏所得（选填，不入统计）</label>
+                    <label for="mobileRetireValue"><i class="fas fa-coins"></i> 归藏所得（未录亦可，不登总录）</label>
                     <input type="number" id="mobileRetireValue" min="0" step="0.01" placeholder="如变卖或回收所得">
                 </div>
                 
@@ -2501,7 +2501,7 @@
         </div>
         
         <footer>
-            <p>百物志 &copy; 2026 | 数据同步保存在 Supabase 云端</p>
+            <p>百物志 &copy; 2026 | 志稿并藏于 Supabase 云间</p>
         </footer>
     </div>
     
@@ -2528,7 +2528,7 @@
     <div class="cloud-mask" id="cloudMask">
         <div class="cloud-dialog">
             <h2><i class="fas fa-cloud"></i> 云端寄存</h2>
-            <p class="hint" id="cloudHint">数据默认只存本机。登入后可与手机、其他电脑同用一份百物录。</p>
+            <p class="hint" id="cloudHint">百物所录，默藏本匣；登入后，余匣可共录一册百物录。</p>
 
             <!-- 未配置 -->
             <div id="cloudConfigBox" style="display: none;">
@@ -2985,7 +2985,7 @@
         // 渲染临时子项列表（PC + 移动端同时渲染）
         function renderTempSubItems() {
             const html = tempSubItems.length === 0
-                ? '<div class="subitem-empty">暂无附记，点「添一笔」可记录配件、维修等费用</div>'
+                ? '<div class="subitem-empty">暂无附记。点「添一笔」，可录与器物相关的杂记。</div>'
                 : tempSubItems.map(si => {
                     const income = si.type === 'income';
                     const signed = subSigned(si);
@@ -2995,10 +2995,10 @@
                         <span class="sub-name"><i class="fas fa-angle-right"></i> ${escapeHtml(si.name)}</span>
                         <span class="sub-meta">${escapeHtml(si.date || '')}</span>
                         <span class="sub-price ${income ? 'income' : ''}">${signed > 0 ? '+' : ''}${signed.toFixed(2)} 元</span>
-                        <button type="button" class="subitem-edit" onclick="editTempSubItem('${si.id}')" title="编辑该附项">
+                        <button type="button" class="subitem-edit" onclick="editTempSubItem('${si.id}')" title="重订该附记">
                             <i class="fas fa-pen"></i>
                         </button>
-                        <button type="button" class="subitem-del" onclick="removeTempSubItem('${si.id}')" title="删除该附项">
+                        <button type="button" class="subitem-del" onclick="removeTempSubItem('${si.id}')" title="撤去该附记">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>`;
@@ -3467,7 +3467,7 @@
             const retireValue = retireValueRaw === '' ? null : Math.max(parseFloat(retireValueRaw) || 0, 0);
             
             if (!name) {
-                alert('请填器物之名');
+                alert('请填物名');
                 (isMobile ? mobileItemNameInput : itemNameInput).focus();
                 return;
             }
@@ -3551,7 +3551,7 @@
             const retireValue = retireValueRaw === '' ? null : Math.max(parseFloat(retireValueRaw) || 0, 0);
             
             if (!name) {
-                alert('请填器物之名');
+                alert('请填物名');
                 (isMobile ? mobileItemNameInput : itemNameInput).focus();
                 return;
             }
@@ -4038,7 +4038,7 @@
                         <div class="item-info">
                             <div class="item-info-row">
                                 <span class="item-price"><i class="fas fa-dollar-sign"></i> ${itemTotal.toFixed(2)} 元</span>
-                                <span class="item-daily-cost"><i class="fas fa-calculator"></i> ${dailyCost} 元/天</span>
+                                <span class="item-daily-cost"><i class="fas fa-calculator"></i> ${dailyCost} 元/日</span>
                             </div>
                             <div class="item-info-row">
                                 <span class="item-date"><i class="far fa-clock"></i> ${item.date}</span>
@@ -4053,11 +4053,11 @@
                         <div class="item-days-label">伴我日数</div>
                     </div>
                     <div class="item-actions">
-                        <button class="edit-btn" onclick="editItem(${item.id})" title="修订器物">
-                            <i class="fas fa-edit"></i> 编辑
+                        <button class="edit-btn" onclick="editItem(${item.id})" title="重订此物">
+                            <i class="fas fa-edit"></i> 重订
                         </button>
-                        <button class="delete-btn" onclick="deleteItem(${item.id})" title="删除物品">
-                            <i class="fas fa-trash"></i> 删除
+                        <button class="delete-btn" onclick="deleteItem(${item.id})" title="撤录此物">
+                            <i class="fas fa-trash"></i> 撤录
                         </button>
                     </div>
                 </div>
