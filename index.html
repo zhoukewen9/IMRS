@@ -1035,6 +1035,62 @@
             border: 1px dashed var(--gray-light);
         }
 
+        .sub-counts-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--dark);
+            cursor: pointer;
+        }
+
+        .sub-counts-label input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .sub-qty-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .sub-qty-row span {
+            white-space: nowrap;
+        }
+
+        .sub-qty-row input {
+            width: 64px;
+            padding: 4px 6px;
+            font-size: 0.8rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 6px;
+        }
+
+        .sub-count-tag {
+            font-size: 0.62rem;
+            padding: 1px 5px;
+            border-radius: 999px;
+            background: rgba(63, 157, 70, 0.12);
+            color: #2f7a35;
+            white-space: nowrap;
+        }
+
+        .item-qty-tag {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: rgba(74, 111, 165, 0.12);
+            padding: 1px 6px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
         .subitem-item {
             display: flex;
             align-items: center;
@@ -1196,7 +1252,7 @@
             font-weight: 600;
             white-space: nowrap;
         }
-        /* ===================== 云端寄存界面 ===================== */
+        /* ===================== 云藏界面 ===================== */
         .cloud-chip {
             position: fixed;
             top: 10px;
@@ -2143,16 +2199,16 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-book-open"></i> 百物志</h1>
-            <p class="subtitle">为身边器物立一小志：记其值，计其日耗，亦记其归藏。</p>
+            <p class="subtitle">为身边长物立一小志：记其值，计其日耗，数其件数，亦记其归藏。</p>
             
             <div class="stats-container" id="statsContainer">
                 <div class="stat-card">
-                    <div class="stat-label">在册器物</div>
+                    <div class="stat-label">在册长物</div>
                     <div class="stat-value"><span id="totalItems">0</span><small>件</small></div>
                 </div>
                 
                 <div class="stat-card">
-                    <div class="stat-label">器物总值</div>
+                    <div class="stat-label">长物总值</div>
                     <div class="stat-value"><span id="totalAssets">0</span><small>元</small></div>
                 </div>
                 
@@ -2168,7 +2224,7 @@
             <div class="card-header">
                 <div class="card-title-container">
                     <i class="fas fa-chart-pie"></i>
-                    <h2>分类志</h2>
+                    <h2>分卷</h2>
                 </div>
                 <button type="button" class="filter-clear" id="clearCategoryFilter" style="display: none;">
                     <i class="fas fa-times"></i> 尽览
@@ -2194,18 +2250,18 @@
                     
                     <div class="form-row-2">
                         <div class="form-group">
-                            <label><i class="fas fa-layer-group"></i> 门类</label>
+                            <label><i class="fas fa-layer-group"></i> 归卷</label>
                             <button type="button" class="field-select" id="categorySelectBtn" onclick="openCategoryPicker('pc')">
                                 <span class="fs-emoji" id="pcCategoryIcon">📦</span>
-                                <span class="fs-text" id="pcCategoryText">择门类</span>
+                                <span class="fs-text" id="pcCategoryText">择卷</span>
                                 <i class="fas fa-chevron-down fs-caret"></i>
                             </button>
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-icons"></i> 图记</label>
+                            <label><i class="fas fa-icons"></i> 图样</label>
                             <button type="button" class="field-select" id="iconSelectBtn">
                                 <span class="fs-emoji" id="pcIconEmoji">📦</span>
-                                <span class="fs-text" id="pcIconText">择图记</span>
+                                <span class="fs-text" id="pcIconText">择图样</span>
                                 <i class="fas fa-chevron-down fs-caret"></i>
                             </button>
                         </div>
@@ -2216,14 +2272,20 @@
                         <input type="text" id="itemName" placeholder="诸如：案头笔札、架上书册、砚台琴器、茶具香具……">
                     </div>
                     
-                    <div class="form-group">
-                        <label for="itemPrice"><i class="fas fa-dollar-sign"></i> 所费银钱（元）</label>
-                        <input type="number" id="itemPrice" min="0" step="0.01" placeholder="0.00">
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="itemPrice"><i class="fas fa-rmb"></i> 所费银钱（元）</label>
+                            <input type="number" id="itemPrice" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="itemQty"><i class="fas fa-cubes"></i> 件数</label>
+                            <input type="number" id="itemQty" min="1" step="1" value="1">
+                        </div>
                     </div>
 
                     <!-- 附加项 -->
                     <div class="form-group">
-                        <label><i class="fas fa-list-ul"></i> 附记（未录亦可）</label>
+                        <label><i class="fas fa-list-ul"></i> 附记（可略）</label>
                         <div class="subitem-field-row">
                             <div class="subitem-amount-box"><span id="subItemTotal">0.00</span> 元</div>
                             <button type="button" class="btn btn-warning subitem-add-btn" id="addSubItemBtn">
@@ -2239,12 +2301,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="retireDate"><i class="fas fa-flag-checkered"></i> 归藏之日（未录亦可）</label>
+                        <label for="retireDate"><i class="fas fa-flag-checkered"></i> 归藏之日（可略）</label>
                         <input type="date" id="retireDate" class="date-empty">
                     </div>
 
                     <div class="form-group">
-                        <label for="retireValue"><i class="fas fa-coins"></i> 归藏所得（未录亦可，不登总录）</label>
+                        <label for="retireValue"><i class="fas fa-coins"></i> 归藏所得（可略，不登总录）</label>
                         <input type="number" id="retireValue" min="0" step="0.01" placeholder="如变卖或回收所得">
                     </div>
                     
@@ -2291,7 +2353,7 @@
                     <div class="card-header">
                         <div class="card-title-container">
                             <i class="fas fa-list"></i>
-                            <h2>百物录</h2>
+                            <h2>正文</h2>
                             <button type="button" class="filter-chip" id="pcFilterChip" style="display: none;"></button>
                         </div>
                         
@@ -2330,8 +2392,8 @@
                     <div class="items-list" id="itemsList">
                         <div class="empty-state" id="emptyState">
                             <i class="fas fa-box-open"></i>
-                            <h3>志中尚无器物</h3>
-                            <p>点「入志」，记下第一件器物</p>
+                            <h3>志中尚无长物</h3>
+                            <p>点「入志」，记下第一件长物</p>
                         </div>
                     </div>
                 </div>
@@ -2346,7 +2408,7 @@
                 <div class="card-header">
                     <div class="card-title-container">
                         <i class="fas fa-list"></i>
-                        <h2>百物录</h2>
+                        <h2>正文</h2>
                         <button type="button" class="filter-chip" id="mobileFilterChip" style="display: none;"></button>
                     </div>
                     
@@ -2385,8 +2447,8 @@
                 <div class="items-list" id="mobileItemsList">
                     <div class="empty-state" id="mobileEmptyState">
                         <i class="fas fa-box-open"></i>
-                        <h3>志中尚无器物</h3>
-                        <p>点「入志」，记下第一件器物</p>
+                        <h3>志中尚无长物</h3>
+                        <p>点「入志」，记下第一件长物</p>
                     </div>
                 </div>
             </div>
@@ -2407,18 +2469,18 @@
                 
                 <div class="form-row-2">
                     <div class="form-group">
-                        <label><i class="fas fa-layer-group"></i> 门类</label>
+                        <label><i class="fas fa-layer-group"></i> 归卷</label>
                         <button type="button" class="field-select" id="mobileCategorySelectBtn" onclick="openCategoryPicker('mobile')">
                             <span class="fs-emoji" id="mobileCategoryIcon">📦</span>
-                            <span class="fs-text" id="mobileCategoryText">择门类</span>
+                            <span class="fs-text" id="mobileCategoryText">择卷</span>
                             <i class="fas fa-chevron-down fs-caret"></i>
                         </button>
                     </div>
                     <div class="form-group">
-                        <label><i class="fas fa-icons"></i> 图记</label>
+                        <label><i class="fas fa-icons"></i> 图样</label>
                         <button type="button" class="field-select" id="mobileIconSelectBtn">
                             <span class="fs-emoji" id="mobileIconEmoji">📦</span>
-                            <span class="fs-text" id="mobileIconText">择图记</span>
+                            <span class="fs-text" id="mobileIconText">择图样</span>
                             <i class="fas fa-chevron-down fs-caret"></i>
                         </button>
                     </div>
@@ -2429,14 +2491,20 @@
                     <input type="text" id="mobileItemName" placeholder="诸如：案头笔札、架上书册、砚台琴器、茶具香具……">
                 </div>
                 
-                <div class="form-group">
-                    <label for="mobileItemPrice"><i class="fas fa-dollar-sign"></i> 所费银钱（元）</label>
-                    <input type="number" id="mobileItemPrice" min="0" step="0.01" placeholder="0.00">
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="mobileItemPrice"><i class="fas fa-rmb"></i> 所费银钱（元）</label>
+                        <input type="number" id="mobileItemPrice" min="0" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="mobileItemQty"><i class="fas fa-cubes"></i> 件数</label>
+                        <input type="number" id="mobileItemQty" min="1" step="1" value="1">
+                    </div>
                 </div>
 
                 <!-- 附加项 -->
                 <div class="form-group">
-                    <label><i class="fas fa-list-ul"></i> 附记（未录亦可）</label>
+                    <label><i class="fas fa-list-ul"></i> 附记（可略）</label>
                     <div class="subitem-field-row">
                         <div class="subitem-amount-box"><span id="mobileSubItemTotal">0.00</span> 元</div>
                         <button type="button" class="btn btn-warning subitem-add-btn" id="mobileAddSubItemBtn">
@@ -2452,12 +2520,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="mobileRetireDate"><i class="fas fa-flag-checkered"></i> 归藏之日（未录亦可）</label>
+                    <label for="mobileRetireDate"><i class="fas fa-flag-checkered"></i> 归藏之日（可略）</label>
                     <input type="date" id="mobileRetireDate" class="date-empty">
                 </div>
 
                 <div class="form-group">
-                    <label for="mobileRetireValue"><i class="fas fa-coins"></i> 归藏所得（未录亦可，不登总录）</label>
+                    <label for="mobileRetireValue"><i class="fas fa-coins"></i> 归藏所得（可略，不登总录）</label>
                     <input type="number" id="mobileRetireValue" min="0" step="0.01" placeholder="如变卖或回收所得">
                 </div>
                 
@@ -2509,30 +2577,30 @@
     <div class="bottom-nav">
         <a href="#" class="nav-item active" data-page="mobileHomePage">
             <i class="fas fa-home"></i>
-            <span>正堂</span>
+            <span>卷首</span>
         </a>
         
         <a href="#" class="nav-add-btn" data-page="mobileAddPage"></a>
         
         <a href="#" class="nav-item" data-page="mobileMyPage">
             <i class="fas fa-user"></i>
-            <span>己斋</span>
+            <span>书末</span>
         </a>
     </div>
 
-    <!-- 云端寄存入口 -->
-    <div class="cloud-chip" id="cloudChip" title="云端寄存设置">
-        <span class="dot"></span><span id="cloudChipText">独存本机</span>
+    <!-- 云藏入口 -->
+    <div class="cloud-chip" id="cloudChip" title="云藏设置">
+        <span class="dot"></span><span id="cloudChipText">仅存本匣</span>
     </div>
 
     <div class="cloud-mask" id="cloudMask">
         <div class="cloud-dialog">
-            <h2><i class="fas fa-cloud"></i> 云端寄存</h2>
-            <p class="hint" id="cloudHint">百物所录，默藏本匣；登入后，余匣可共录一册百物录。</p>
+            <h2><i class="fas fa-cloud"></i> 云藏</h2>
+            <p class="hint" id="cloudHint">长物所录，默藏本匣；登入后，诸匣共录一册。</p>
 
             <!-- 未配置 -->
             <div id="cloudConfigBox" style="display: none;">
-                <p class="hint">当前独存本机。要开启云端寄存，请在下面这个文件里填入 Supabase 项目地址和 anon key，然后重启软件：</p>
+                <p class="hint">当前仅存本匣。要开启云藏，请在下面这个文件里填入 Supabase 项目地址和 anon key，然后重启软件：</p>
                 <div class="cloud-note" id="cloudConfigPath">（读取中…）</div>
                 <div class="cloud-actions">
                     <button class="btn btn-info" id="cloudRevealConfig"><i class="fas fa-folder-open"></i> 打开所在文件夹</button>
@@ -2560,7 +2628,7 @@
             <div id="cloudAccountBox" style="display: none;">
                 <p class="hint">已登入：<b id="cloudAccountEmail"></b></p>
                 <p class="hint">上次合卷：<span id="cloudLastSync">—</span></p>
-                <p class="hint" id="cloudPendingLine" style="display: none;">待上传：<b id="cloudPending">0</b> 条（联网后自动重试）</p>
+                <p class="hint" id="cloudPendingLine" style="display: none;">待合：<b id="cloudPending">0</b> 条（联网后自动重试）</p>
                 <div class="cloud-actions">
                     <button class="btn btn-info" id="cloudSyncNow"><i class="fas fa-rotate"></i> 即刻合卷</button>
                     <button class="btn btn-warning" id="cloudSignOut">离席</button>
@@ -2595,7 +2663,7 @@
     <div class="icon-mask" id="iconMask">
         <div class="icon-dialog">
             <div class="icon-dialog-head">
-                <h3><i class="fas fa-icons"></i> 择图记</h3>
+                <h3><i class="fas fa-icons"></i> 择图样</h3>
                 <button type="button" class="icon-close" id="iconClose">
                     <i class="fas fa-times"></i>
                 </button>
@@ -2609,7 +2677,7 @@
     <div class="icon-mask" id="categoryMask">
         <div class="icon-dialog" style="max-width: 380px;">
             <div class="icon-dialog-head">
-                <h3><i class="fas fa-layer-group"></i> 择门类</h3>
+                <h3><i class="fas fa-layer-group"></i> 择卷</h3>
                 <button type="button" class="icon-close" id="categoryClose">
                     <i class="fas fa-times"></i>
                 </button>
@@ -2624,23 +2692,32 @@
             <div class="sub-dialog-head"><h3 id="subDialogTitle">添一笔附记</h3></div>
             <div class="sub-dialog-body">
                 <div class="field">
-                    <label>名称</label>
+                    <label>附记之名</label>
                     <input type="text" id="subFormName" placeholder="如：钢化膜、保护壳">
                 </div>
                 <div class="field">
-                    <label>类型</label>
+                    <label>出入</label>
                     <div class="sub-type-switch">
                         <button type="button" class="sub-type active" id="subTypeExpense" onclick="setSubType('expense')">耗</button>
                         <button type="button" class="sub-type" id="subTypeIncome" onclick="setSubType('income')">得</button>
                     </div>
                 </div>
                 <div class="field">
-                    <label>金额</label>
+                    <label>银钱</label>
                     <input type="number" id="subFormPrice" min="0" step="0.01" placeholder="0.00">
                 </div>
                 <div class="field">
-                    <label>日期</label>
+                    <label>记日</label>
                     <input type="date" id="subFormDate">
+                </div>
+                <div class="field">
+                    <label class="sub-counts-label">
+                        <input type="checkbox" id="subFormCounts" onchange="syncSubCounts()"> 自成一件，计入在册
+                    </label>
+                    <div class="sub-qty-row" id="subQtyRow" style="display:none;">
+                        <span>件数</span>
+                        <input type="number" id="subFormQty" min="1" step="1" value="1">
+                    </div>
                 </div>
             </div>
             <div class="sub-dialog-actions">
@@ -2792,12 +2869,15 @@
                 icon: def ? def.key : cat.icon,
                 retireDate: item.retireDate || '',
                 retireValue: item.retireValue === '' || item.retireValue == null ? null : (Number(item.retireValue) || 0),
+                qty: Math.max(1, Math.floor(Number(item.qty) || 1)),
                 subItems: Array.isArray(item.subItems) ? item.subItems.map(si => ({
                     id: si.id || genSubId(),
                     name: si.name,
                     type: si.type === 'income' ? 'income' : 'expense',
                     price: Number(si.price) || 0,
-                    date: si.date || item.date || ''
+                    date: si.date || item.date || '',
+                    counts: !!si.counts,
+                    qty: Math.max(1, Math.floor(Number(si.qty) || 1))
                 })) : []
             };
         }
@@ -2810,6 +2890,15 @@
         // 附加项按类型换算成金额（支出为正，收入为负）
         function subSigned(si) {
             return (si.type === 'income' ? -1 : 1) * (Number(si.price) || 0);
+        }
+
+        // 一件记录的实物件数：自身件数 + 标记为「自成一件」的附记件数
+        function itemUnits(item) {
+            let n = Math.max(1, Math.floor(Number(item.qty) || 1));
+            (item.subItems || []).forEach(si => {
+                if (si.counts) n += Math.max(1, Math.floor(Number(si.qty) || 1));
+            });
+            return n;
         }
 
         // 表单当前选中的分类与图标（PC / 手机各一份）
@@ -2846,6 +2935,7 @@
         // DOM元素 - PC端
         const itemNameInput = document.getElementById('itemName');
         const itemPriceInput = document.getElementById('itemPrice');
+        const itemQtyInput = document.getElementById('itemQty');
         const purchaseDateInput = document.getElementById('purchaseDate');
         const addItemBtn = document.getElementById('addItemBtn');
         const updateItemBtn = document.getElementById('updateItemBtn');
@@ -2872,6 +2962,7 @@
         // DOM元素 - 移动端
         const mobileItemNameInput = document.getElementById('mobileItemName');
         const mobileItemPriceInput = document.getElementById('mobileItemPrice');
+        const mobileItemQtyInput = document.getElementById('mobileItemQty');
         const mobilePurchaseDateInput = document.getElementById('mobilePurchaseDate');
 
         const mobileAddItemBtn = document.getElementById('mobileAddItemBtn');
@@ -2932,6 +3023,9 @@
         const subCancelBtn = document.getElementById('subCancel');
         const subConfirmBtn = document.getElementById('subConfirm');
         const subDialogTitle = document.getElementById('subDialogTitle');
+        const subFormCounts = document.getElementById('subFormCounts');
+        const subFormQty = document.getElementById('subFormQty');
+        const subQtyRow = document.getElementById('subQtyRow');
         let subFormType = 'expense';
         let editingSubId = null;
         
@@ -2985,7 +3079,7 @@
         // 渲染临时子项列表（PC + 移动端同时渲染）
         function renderTempSubItems() {
             const html = tempSubItems.length === 0
-                ? '<div class="subitem-empty">暂无附记。点「添一笔」，可录与器物相关的杂记。</div>'
+                ? '<div class="subitem-empty">暂无附记。点「添一笔」，可录与长物相关的杂记。</div>'
                 : tempSubItems.map(si => {
                     const income = si.type === 'income';
                     const signed = subSigned(si);
@@ -2993,6 +3087,7 @@
                     <div class="subitem-item">
                         <span class="sub-type ${income ? 'income' : ''}">${income ? '得' : '耗'}</span>
                         <span class="sub-name"><i class="fas fa-angle-right"></i> ${escapeHtml(si.name)}</span>
+                        ${si.counts ? '<span class="sub-count-tag">在册' + (Number(si.qty) > 1 ? '×' + si.qty : '') + '</span>' : ''}
                         <span class="sub-meta">${escapeHtml(si.date || '')}</span>
                         <span class="sub-price ${income ? 'income' : ''}">${signed > 0 ? '+' : ''}${signed.toFixed(2)} 元</span>
                         <button type="button" class="subitem-edit" onclick="editTempSubItem('${si.id}')" title="重订该附记">
@@ -3028,6 +3123,9 @@
             subFormName.value = '';
             subFormPrice.value = '';
             subFormDate.value = today;
+            subFormCounts.checked = false;
+            subFormQty.value = 1;
+            syncSubCounts();
             setSubType('expense');
             subMask.classList.add('open');
             setTimeout(function() { subFormName.focus(); }, 50);
@@ -3042,6 +3140,9 @@
             subFormName.value = si.name;
             subFormPrice.value = si.price;
             subFormDate.value = si.date || today;
+            subFormCounts.checked = !!si.counts;
+            subFormQty.value = Math.max(1, Number(si.qty) || 1);
+            syncSubCounts();
             setSubType(si.type);
             subMask.classList.add('open');
             setTimeout(function() { subFormName.focus(); }, 50);
@@ -3058,18 +3159,26 @@
             subTypeIncome.classList.toggle('active', type === 'income');
         }
 
+        // 勾选「自成一件」后才显示件数
+        function syncSubCounts() {
+            if (!subFormCounts || !subQtyRow) return;
+            subQtyRow.style.display = subFormCounts.checked ? 'flex' : 'none';
+        }
+
         function confirmSubItem() {
             const name = subFormName.value.trim();
             const price = parseFloat(subFormPrice.value);
             const date = subFormDate.value || today;
+            const counts = !!(subFormCounts && subFormCounts.checked);
+            const subQty = Math.max(1, Math.floor(Number(subFormQty && subFormQty.value) || 1));
 
             if (!name) {
-                alert('请填附记之名');
+                alert('附记之名未录，请补上');
                 subFormName.focus();
                 return;
             }
             if (isNaN(price) || price < 0) {
-                alert('请输入有效的金额');
+                alert('银钱数不太对，请检查');
                 subFormPrice.focus();
                 return;
             }
@@ -3081,6 +3190,8 @@
                     target.type = subFormType;
                     target.price = price;
                     target.date = date;
+                    target.counts = counts;
+                    target.qty = subQty;
                 }
             } else {
                 tempSubItems.push({
@@ -3088,7 +3199,9 @@
                     name: name,
                     type: subFormType,
                     price: price,
-                    date: date
+                    date: date,
+                    counts: counts,
+                    qty: subQty
                 });
             }
             renderTempSubItems();
@@ -3313,7 +3426,7 @@
                     const textEl = row[1];
                     const iconEl = row[2];
                     const key = formState[target].category;
-                    if (textEl) textEl.textContent = key ? getCategory(key).name : '择门类';
+                    if (textEl) textEl.textContent = key ? getCategory(key).name : '择卷';
                     if (iconEl) iconEl.textContent = key ? getCategory(key).emoji : '📦';
                 });
         }
@@ -3354,7 +3467,7 @@
             const emojiEl = target === 'pc' ? pcIconEmoji : mobileIconEmoji;
             const textEl = target === 'pc' ? pcIconText : mobileIconText;
             if (emojiEl) emojiEl.innerHTML = def ? iconGlyphHtml(def) : (cat ? cat.emoji : '📦');
-            if (textEl) textEl.textContent = def ? def.name : '择图记';
+            if (textEl) textEl.textContent = def ? def.name : '择图样';
         }
 
         function openIconPicker(target) {
@@ -3405,7 +3518,7 @@
                 if (isRetired(item)) return;
                 const cat = getCategory(item.category);
                 if (!stats[cat.key]) stats[cat.key] = { count: 0, total: 0, daily: 0 };
-                stats[cat.key].count += 1;
+                stats[cat.key].count += itemUnits(item);
                 const total = getItemTotal(item);
                 const days = getDaysSince(item.date, item.retireDate);
                 stats[cat.key].total += total;
@@ -3465,27 +3578,28 @@
             const retireDate = isMobile ? mobileRetireDateInput.value : retireDateInput.value;
             const retireValueRaw = isMobile ? mobileRetireValueInput.value : retireValueInput.value;
             const retireValue = retireValueRaw === '' ? null : Math.max(parseFloat(retireValueRaw) || 0, 0);
+            const qty = Math.max(1, Math.floor(parseInt(isMobile ? mobileItemQtyInput.value : itemQtyInput.value, 10) || 1));
             
             if (!name) {
-                alert('请填物名');
+                alert('物名未录，请补上');
                 (isMobile ? mobileItemNameInput : itemNameInput).focus();
                 return;
             }
             
             if (isNaN(price) || price <= 0) {
-                alert('请输入有效的价格');
+                alert('所费银钱不太对，请检查');
                 (isMobile ? mobileItemPriceInput : itemPriceInput).focus();
                 return;
             }
             
             if (!date) {
-                alert('请选择新增时间');
+                alert('请择入志之日');
                 (isMobile ? mobilePurchaseDateInput : purchaseDateInput).focus();
                 return;
             }
 
             if (retireDate && retireDate < date) {
-                alert('归藏之日不能早于入志之日');
+                alert('归藏之日不得早于入志之日');
                 (isMobile ? mobileRetireDateInput : retireDateInput).focus();
                 return;
             }
@@ -3494,7 +3608,7 @@
             const duplicate = items.find(function(item) {
                 return item.name.trim().toLowerCase() === name.toLowerCase() && item.date === date;
             });
-            if (duplicate && !confirm('志中已有同名同日的器物：' + duplicate.name +
+            if (duplicate && !confirm('志中已有同名同日的长物：' + duplicate.name +
                 '\n\n仍要再记一条吗？（同型号两台选「确定」；重复了请选「罢了」，直接修订原条）')) {
                 return;
             }
@@ -3509,11 +3623,13 @@
                 date: date,
                 retireDate: retireDate,
                 retireValue: retireValue,
+                qty: qty,
                 image: '',
                 category: category,
                 icon: state.icon || getCategory(category).icon,
                 subItems: tempSubItems.map(si => ({
-                    id: si.id, name: si.name, type: si.type, price: si.price, date: si.date
+                    id: si.id, name: si.name, type: si.type, price: si.price, date: si.date,
+                    counts: !!si.counts, qty: Math.max(1, Math.floor(Number(si.qty) || 1))
                 })),
                 addedAt: new Date().toISOString()
             };
@@ -3549,27 +3665,28 @@
             const retireDate = isMobile ? mobileRetireDateInput.value : retireDateInput.value;
             const retireValueRaw = isMobile ? mobileRetireValueInput.value : retireValueInput.value;
             const retireValue = retireValueRaw === '' ? null : Math.max(parseFloat(retireValueRaw) || 0, 0);
+            const qty = Math.max(1, Math.floor(parseInt(isMobile ? mobileItemQtyInput.value : itemQtyInput.value, 10) || 1));
             
             if (!name) {
-                alert('请填物名');
+                alert('物名未录，请补上');
                 (isMobile ? mobileItemNameInput : itemNameInput).focus();
                 return;
             }
             
             if (isNaN(price) || price <= 0) {
-                alert('请输入有效的价格');
+                alert('所费银钱不太对，请检查');
                 (isMobile ? mobileItemPriceInput : itemPriceInput).focus();
                 return;
             }
             
             if (!date) {
-                alert('请选择新增时间');
+                alert('请择入志之日');
                 (isMobile ? mobilePurchaseDateInput : purchaseDateInput).focus();
                 return;
             }
 
             if (retireDate && retireDate < date) {
-                alert('归藏之日不能早于入志之日');
+                alert('归藏之日不得早于入志之日');
                 (isMobile ? mobileRetireDateInput : retireDateInput).focus();
                 return;
             }
@@ -3586,10 +3703,12 @@
                     date: date,
                     retireDate: retireDate,
                     retireValue: retireValue,
+                    qty: qty,
                     category: category,
                     icon: state.icon || getCategory(category).icon,
                     subItems: tempSubItems.map(si => ({
-                        id: si.id, name: si.name, type: si.type, price: si.price, date: si.date
+                        id: si.id, name: si.name, type: si.type, price: si.price, date: si.date,
+                        counts: !!si.counts, qty: Math.max(1, Math.floor(Number(si.qty) || 1))
                     }))
                 };
                 
@@ -3645,6 +3764,7 @@
         function resetForm() {
             itemNameInput.value = '';
             itemPriceInput.value = '';
+            itemQtyInput.value = 1;
             purchaseDateInput.value = today;
             retireDateInput.value = '';
             syncDateEmpty(retireDateInput);
@@ -3662,6 +3782,7 @@
         function resetMobileForm() {
             mobileItemNameInput.value = '';
             mobileItemPriceInput.value = '';
+            mobileItemQtyInput.value = 1;
             mobilePurchaseDateInput.value = today;
             mobileRetireDateInput.value = '';
             syncDateEmpty(mobileRetireDateInput);
@@ -3693,6 +3814,7 @@
             if (isMobile) {
                 mobileItemNameInput.value = item.name;
                 mobileItemPriceInput.value = item.price;
+                mobileItemQtyInput.value = item.qty || 1;
                 mobilePurchaseDateInput.value = item.date;
                 mobileRetireDateInput.value = item.retireDate || '';
                 syncDateEmpty(mobileRetireDateInput);
@@ -3702,7 +3824,7 @@
                 mobileUpdateItemBtn.style.display = 'flex';
                 mobileCancelEditBtn.style.display = 'flex';
                 mobileAddItemBtn.style.display = 'none';
-                mobileFormTitle.textContent = '修订器物';
+                mobileFormTitle.textContent = '修订长物';
                 
                 mobilePages.forEach(page => page.classList.remove('active'));
                 document.getElementById('mobileAddPage').classList.add('active');
@@ -3710,6 +3832,7 @@
             } else {
                 itemNameInput.value = item.name;
                 itemPriceInput.value = item.price;
+                itemQtyInput.value = item.qty || 1;
                 purchaseDateInput.value = item.date;
                 retireDateInput.value = item.retireDate || '';
                 syncDateEmpty(retireDateInput);
@@ -3719,7 +3842,7 @@
                 updateItemBtn.style.display = 'flex';
                 cancelEditBtn.style.display = 'flex';
                 addItemBtn.style.display = 'none';
-                formTitle.textContent = '修订器物';
+                formTitle.textContent = '修订长物';
             }
             
             formState[isMobile ? 'mobile' : 'pc'].category = item.category || 'other';
@@ -3733,7 +3856,7 @@
         // ==================== 导出 ====================
         function exportToExcel() {
             if (items.length === 0) {
-                alert('志中尚无器物可誊');
+                alert('志中尚无长物可誊');
                 return;
             }
             
@@ -3751,7 +3874,8 @@
                     item.category || 'other',
                     item.icon || getCategory(item.category).icon,
                     item.retireDate || '',
-                    item.retireValue == null ? '' : item.retireValue
+                    item.retireValue == null ? '' : item.retireValue,
+                    Math.max(1, Math.floor(Number(item.qty) || 1))
                 ].join(',');
                 csvText += row + "\n";
             });
@@ -3820,7 +3944,9 @@
                                             name: String(x.name),
                                             type: x.type === 'income' ? 'income' : 'expense',
                                             price: Number(x.price) || 0,
-                                            date: x.date || date
+                                            date: x.date || date,
+                                            counts: !!x.counts,
+                                            qty: Math.max(1, Math.floor(Number(x.qty) || 1))
                                         }));
                                 }
                             } catch (err) {
@@ -3840,6 +3966,7 @@
                             image: image,
                             category: CATEGORIES.some(c => c.key === (columns[6] || '').trim()) ? columns[6].trim() : 'other',
                             icon: getIconDef((columns[7] || '').trim()) ? columns[7].trim() : null,
+                            qty: Math.max(1, Math.floor(Number((columns[10] || '').replace(/^"|"$/g, '').trim()) || 1)),
                             subItems: subItems,
                             addedAt: new Date().toISOString()
                         });
@@ -3847,7 +3974,7 @@
                 }
                 
                 if (importedItems.length === 0) {
-                    alert('未觅得可收录的器物数据');
+                    alert('未觅得可收录的长物数据');
                     return;
                 }
                 
@@ -3881,7 +4008,7 @@
                 importFileInput.value = '';
                 mobilePageImportFile.value = '';
                 
-                alert(`导入完成：新增 ${importedAdded} 个，更新 ${importedUpdated} 个`);
+                alert(`导入完成：收录 ${importedAdded} 条，修订 ${importedUpdated} 条`);
             };
             
             reader.readAsText(file);
@@ -3976,14 +4103,14 @@
             if (visibleItems.length === 0) {
                 const titleEl = targetEmptyState.querySelector('h3');
                 const textEl = targetEmptyState.querySelector('p');
-                let emptyTitle = '志中尚无器物';
-                let emptyText = '点「入志」，记下第一件器物';
+                let emptyTitle = '志中尚无长物';
+                let emptyText = '点「入志」，记下第一件长物';
                 if (activeCategory) {
-                    emptyTitle = '此类暂无器物';
-                    emptyText = '换个门类看看，或点「尽览」';
+                    emptyTitle = '此卷暂无长物';
+                    emptyText = '换卷看看，或点「尽览」';
                 } else if (retireFilter === 'retired') {
                     emptyTitle = '尚无归藏之物';
-                    emptyText = '归藏之日已到的器物会列于此';
+                    emptyText = '归藏之日已到的长物会列于此';
                 } else if (retireFilter === 'active') {
                     emptyTitle = '志中已无在用之物';
                     emptyText = '点「入志」，再添一件';
@@ -4016,6 +4143,7 @@
                     return `
                     <div class="subitem-row">
                         <span class="subitem-row-name"><i class="fas fa-angle-right"></i> ${escapeHtml(si.name)}
+                            ${si.counts ? '<span class="sub-count-tag">在册' + (Number(si.qty) > 1 ? '×' + si.qty : '') + '</span>' : ''}
                             <em class="subitem-row-date">${escapeHtml(si.date || '')}</em></span>
                         <span class="subitem-row-price ${income ? 'income' : ''}">${signed > 0 ? '+' : ''}${signed.toFixed(2)} 元</span>
                     </div>`;
@@ -4031,13 +4159,14 @@
                     <div class="item-details">
                         <div class="item-name">
                             ${escapeHtml(item.name)}
+                            ${Number(item.qty) > 1 ? `<span class="item-qty-tag">×${item.qty}</span>` : ''}
                             <span class="cat-badge" style="${catVars(cat)}">${cat.name}</span>
                             ${isRetired(item) ? '<span class="retire-badge">归藏</span>' : ''}
                             ${subItems.length ? `<span class="subitem-badge">${subItems.length} 项附记</span>` : ''}
                         </div>
                         <div class="item-info">
                             <div class="item-info-row">
-                                <span class="item-price"><i class="fas fa-dollar-sign"></i> ${itemTotal.toFixed(2)} 元</span>
+                                <span class="item-price"><i class="fas fa-rmb"></i> ${itemTotal.toFixed(2)} 元</span>
                                 <span class="item-daily-cost"><i class="fas fa-calculator"></i> ${dailyCost} 元/日</span>
                             </div>
                             <div class="item-info-row">
@@ -4082,7 +4211,7 @@
             renderItems();
         }
         
-        // 修订器物
+        // 修订长物
         function editItem(id) {
             const item = items.find(item => item.id === id);
             if (item) {
@@ -4110,7 +4239,7 @@
             items.forEach(item => {
                 // 已退役的物品不参与任何统计（件数、总资产、日均成本）
                 if (isRetired(item)) return;
-                totalItems += 1;
+                totalItems += itemUnits(item);
                 const itemTotal = getItemTotal(item);
                 totalAssets += itemTotal;
                 
@@ -4140,7 +4269,7 @@
             cloudInit();
         }
         
-        // ==================== 云端寄存（Supabase） ====================
+        // ==================== 云藏（Supabase） ====================
         const CloudApp = {
             config: (typeof window.APP_CONFIG !== 'undefined' && window.APP_CONFIG) ? window.APP_CONFIG : null,
             client: null,
@@ -4261,6 +4390,7 @@
                 icon: item.icon || null,
                 retire_date: item.retireDate || null,
                 retire_value: item.retireValue == null ? null : Number(item.retireValue),
+                qty: Math.max(1, Math.floor(Number(item.qty) || 1)),
                 added_at: item.addedAt || new Date().toISOString(),
                 updated_at: new Date().toISOString()
             };
@@ -4274,6 +4404,7 @@
                 delete legacy.icon;
                 delete legacy.retire_date;
                 delete legacy.retire_value;
+                delete legacy.qty;
                 const retry = await CloudApp.client
                     .from('items')
                     .upsert(legacy, { onConflict: 'user_id,local_id' });
@@ -4325,7 +4456,7 @@
                     }
                     CloudApp.lastSyncAt = new Date();
                     cloudUpdateSyncInfo();
-                    cloudChip('online', '已与云端合');
+                    cloudChip('online', '已合云藏');
                     return true;
                 } catch (e) {
                     await cloudHandleError(e, 'cloudSyncMsg');
@@ -4392,6 +4523,7 @@
                 icon: r.icon,
                 retireDate: r.retire_date || '',
                 retireValue: r.retire_value == null ? null : Number(r.retire_value),
+                qty: Math.max(1, Math.floor(Number(r.qty) || 1)),
                 addedAt: r.added_at || new Date().toISOString()
             }));
             
@@ -4405,7 +4537,7 @@
             CloudApp.syncing = false;
             CloudApp.lastSyncAt = new Date();
             cloudUpdateSyncInfo();
-            cloudChip('online', '已与云端合');
+            cloudChip('online', '已合云藏');
             cloudShow('cloudPauseBox', false);
             
             for (const item of localOnly) {
@@ -4577,7 +4709,7 @@
             }
             
             if (!CloudApp.config || !CloudApp.config.supabaseUrl || !CloudApp.config.supabaseAnonKey) {
-                cloudChip('', '独存本机');
+                cloudChip('', '仅存本匣');
                 cloudShow('cloudConfigBox', true);
                 return;
             }
